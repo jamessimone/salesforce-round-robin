@@ -1,0 +1,19 @@
+{
+    "packageDirectories": [
+        {
+            "default": true,
+            "package": "salesforce-round-robin",
+            "path": "core",
+            "versionName": "Initial Round Robin release",
+            "versionNumber": "0.0.1.0",
+            "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
+            "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
+        }
+    ],
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "54.0",
+    "packageAliases": {
+        "salesforce-round-robin": "0Ho6g000000GnClCAK"
+    }
+}
