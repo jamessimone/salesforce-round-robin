@@ -5,7 +5,7 @@ private class RoundRobinFlowIntegrationTests {
     User existingUser = [
       SELECT Id, LastName, Email, Alias, TimeZoneSidKey, LocaleSidKey, EmailEncodingKey, ProfileId, LanguageLocaleKey, Username
       FROM User
-      WHERE Name = 'user user'
+      WHERE Id = :UserInfo.getUserId()
     ];
     User roundRobinUser = existingUser.clone();
     roundRobinUser.FirstName = null;
