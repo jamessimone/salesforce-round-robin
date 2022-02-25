@@ -49,6 +49,7 @@ private class FlowRoundRobinAssignerTests {
   static void updatesRecordsWhenFlagIsPassed() {
     ContactPointAddress cpa = new ContactPointAddress(Name = 'updatesRecordsWhenFlagIsPassed');
     insert cpa;
+    cpa.OwnerId = null;
 
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.updateRecords = true;
@@ -57,6 +58,7 @@ private class FlowRoundRobinAssignerTests {
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
-    System.assertEquals(UserInfo.getUserId(), [SELECT OwnerId FROM ContactPointAddress WHERE Id = :cpa.Id].OwnerId);
+    System.assertEquals(true, FlowRoundRobinAssigner.hasBeenUpdated);
+    System.assertEquals(UserInfo.getUserId(), cpa.OwnerId);
   }
 }

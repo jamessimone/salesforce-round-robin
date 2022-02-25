@@ -17,6 +17,18 @@ private class RoundRobinRepositoryTests {
     );
   }
 
+  @IsTest
+  static void avoidsRecursiveUpdateIssues() {
+    Datetime someTimeAgo = System.now().addDays(-3);
+    upsert new RoundRobin__c(LastUpdated__c = someTimeAgo, Name = cacheKey);
+    RoundRobinRepository repo = new RoundRobinRepository();
+
+    repo.accept(new VisitorMock(), new List<SObject>());
+    repo.accept(new VisitorMock(), new List<SObject>());
+
+    System.assert(true, 'Should make it here');
+  }
+
   private class VisitorMock implements IThreadSafeCacheVisitor {
     public String getVisitKey() {
       return cacheKey;

@@ -48,21 +48,39 @@ public without sharing class RoundRobinRepository extends AbstractCacheRepo {
     this.updateCache(CACHED_ASSIGNMENTS);
   }
 
-  private Boolean commitUpdatedAssignment(RoundRobin__c updatedAssignment) {
+  private Boolean commitUpdatedAssignment(RoundRobin__c assignment) {
     Boolean wasCommitSuccessful = true;
     Map<String, RoundRobin__c> currentCache = this.getCachedAssignments();
     if (
-      currentCache.containsKey(updatedAssignment.Name) &&
-      currentCache.get(updatedAssignment.Name).LastUpdated__c > CACHED_ASSIGNMENTS.get(updatedAssignment.Name).LastUpdated__c
+      currentCache.containsKey(assignment.Name) &&
+      currentCache.get(assignment.Name).LastUpdated__c > CACHED_ASSIGNMENTS.get(assignment.Name).LastUpdated__c
     ) {
-      updatedAssignment = currentCache.get(updatedAssignment.Name);
+      assignment = currentCache.get(assignment.Name);
       wasCommitSuccessful = false;
     } else {
-      updatedAssignment.LastUpdated__c = System.now();
-      upsert updatedAssignment;
+      assignment.LastUpdated__c = System.now();
+      /**
+       * integration tests with after save Flows have shown something unfortunate:
+       * though the second (recursive) call to the assigner is spawned in a second transaction
+       * the RoundRobin__c.getAll() still doesn't contain the Id of the inserted record (for the times where the assignment
+       * is being run for the first time).
+       * That means that we can't just call "upsert", and instead have to do this goofy
+       * song and dance to ensure the Id is appended correctly
+      */
+      if (assignment.Id == null) {
+        List<RoundRobin__c> existingAssignments = [SELECT Id FROM RoundRobin__c WHERE Name = :assignment.Name];
+        if (existingAssignments.isEmpty() == false) {
+          assignment.Id = existingAssignments[0].Id;
+        }
+      }
+      if (assignment.Id != null) {
+        update assignment;
+      } else {
+        insert assignment;
+      }
     }
 
-    CACHED_ASSIGNMENTS.put(updatedAssignment.Name, updatedAssignment);
+    CACHED_ASSIGNMENTS.put(assignment.Name, assignment);
     return wasCommitSuccessful;
   }
 

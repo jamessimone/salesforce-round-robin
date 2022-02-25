@@ -1,7 +1,10 @@
 global without sharing class FlowRoundRobinAssigner {
   @TestVisible
-  RoundRobinAssigner.IAssignmentRepo stubAssignmentRepo;
+  private static RoundRobinAssigner.IAssignmentRepo stubAssignmentRepo;
+  @TestVisible
+  private static Boolean hasBeenUpdated = false;
 
+  private static final Set<Id> PROCESSED_RECORD_IDS = new Set<Id>();
   private static final FlowRoundRobinAssigner SELF = new FlowRoundRobinAssigner();
 
   global class FlowInput {
@@ -22,18 +25,40 @@ global without sharing class FlowRoundRobinAssigner {
   @InvocableMethod(category='Round Robin' label='Round robin records')
   global static void assign(List<FlowInput> flowInputs) {
     for (FlowInput input : flowInputs) {
+      SELF.trackAssignedIds(input);
       if (input.recordsToRoundRobin.isEmpty() == false) {
-        SELF.validateInput(input);
-        RoundRobinAssigner.IAssignmentRepo assignmentRepo = SELF.getAssignmentRepo(input);
-        RoundRobinAssigner.Details assignmentDetails = SELF.getAssignmentDetails(input);
-        new RoundRobinAssigner(assignmentRepo, assignmentDetails).assignOwners(input.recordsToRoundRobin);
+        SELF.roundRobin(input);
       }
+    }
+  }
+
+  private void roundRobin(FlowInput input) {
+    this.validateInput(input);
+    RoundRobinAssigner.IAssignmentRepo assignmentRepo = this.getAssignmentRepo(input);
+    RoundRobinAssigner.Details assignmentDetails = this.getAssignmentDetails(input);
+    new RoundRobinAssigner(assignmentRepo, assignmentDetails).assignOwners(input.recordsToRoundRobin);
+    if (input.updateRecords) {
+      update input.recordsToRoundRobin;
+      hasBeenUpdated = true;
     }
   }
 
   private void validateInput(FlowInput input) {
     if (String.isBlank(input.queryToRetrieveAssignees) && String.isBlank(input.assignmentRepoClassName)) {
-      throw new IllegalArgumentException('Query To Retrieve Possible Assignees or API name of class implementing RoundRobinAssigner.IAssignment repo is required!');
+      throw new IllegalArgumentException(
+        'Query To Retrieve Possible Assignees or API name of class implementing RoundRobinAssigner.IAssignment repo is required!'
+      );
+    }
+  }
+
+  private void trackAssignedIds(FlowInput input) {
+    for (Integer reverseIndex = input.recordsToRoundRobin.size() - 1; reverseIndex >= 0; reverseIndex--) {
+      SObject record = input.recordsToRoundRobin[reverseIndex];
+      if (record.Id != null && PROCESSED_RECORD_IDS.contains(record.Id)) {
+        input.recordsToRoundRobin.remove(reverseIndex);
+      } else if (record.Id != null) {
+        PROCESSED_RECORD_IDS.add(record.Id);
+      }
     }
   }
 
@@ -54,20 +79,5 @@ global without sharing class FlowRoundRobinAssigner {
     details.assignmentType = input.recordsToRoundRobin[0].getSObjectType().getDescribe().getName() + '.' + input.ownerFieldApiName;
     details.ownerField = input.ownerFieldApiName;
     return details;
-  }
-
-  private without sharing class QueryAssigner implements RoundRobinAssigner.IAssignmentRepo {
-    private final List<Id> validAssignmentIds;
-    public QueryAssigner(String query, String assignmentFieldName) {
-      Set<Id> assignmentIds = new Set<Id>();
-      List<SObject> matchingRecords = Database.query(query);
-      for (SObject matchingRecord : matchingRecords) {
-        assignmentIds.add((Id) matchingRecord.get(assignmentFieldName));
-      }
-      this.validAssignmentIds = new List<Id>(assignmentIds);
-    }
-    public List<Id> getAssignmentIds(String assignmentType) {
-      return this.validAssignmentIds;
-    }
   }
 }
