@@ -10,7 +10,7 @@ private class RoundRobinFlowIntegrationTests {
     User roundRobinUser = existingUser.clone();
     roundRobinUser.FirstName = null;
     roundRobinUser.Username = 'roundRobin@test.com';
-    // roundRobinUser is hard-coded into the query in flow
+    // "roundRobinUser" is hard-coded into the query in flow
     roundRobinUser.LastName = 'roundRobinUser';
     insert roundRobinUser;
 

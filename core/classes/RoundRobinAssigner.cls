@@ -54,6 +54,9 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
   }
 
   private Integer getNextAssignmentIndex(List<Id> assignmentIds, RoundRobin__c cachedAssignment) {
+    if (cachedAssignment.Index__c == null && assignmentIds.isEmpty() == false) {
+      return 0;
+    }
     Integer currentAssignmentIndex = SENTINEL_INDEX;
     for (Integer index = 0; index < assignmentIds.size(); index++) {
       Id assignmentId = assignmentIds[index];

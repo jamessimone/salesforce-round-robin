@@ -48,7 +48,21 @@ Here are a few ways that you can perform assignments:
     new RoundRobinAssigner(queryRepo, assignmentDetails).assignOwners(someListOfSObjectsToBeAssigned);
   ```
 
-- Or you can supply an implementation of `RoundRobinAssigner.IAssignmentRepo` that retrieves the records that qualify for the ownership pool via the `getAssignmentIds` method
+- Or you can supply an implementation of `RoundRobinAssigner.IAssignmentRepo` that retrieves the records that qualify for the ownership pool via the `getAssignmentIds` method:
+
+```java
+// inside RoundRobinAssigner:
+public interface IAssignmentRepo {
+  // note that the provided implementations of IAssignmentRepo
+  // don't make use of the "assignmentType" argument passed here,
+  // but this helps to decouple your logic for returning assignment Ids
+  // in the event that you want to provide a single implementation that
+  // can respond to multiple assignment types!
+  List<Id> getAssignmentIds(String assignmentType);
+}
+```
+
+The `assignmentType` property that comes from the invocable action (`FlowRoundRobinAssigner`) is always the `Object Type.Field Name`; so something like `Lead.OwnerId` for a typical Lead round robin.
 
 Note that the records are _not_ updated by default in `RoundRobinAssigner`; if you are updating a related list of records (where updating them in a `BEFORE_UPDATED` context wouldn't just persist the updated ownership values by default), you should call `update` or `Database.update` on the records after calling the assigner.
 

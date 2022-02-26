@@ -10,8 +10,6 @@ public without sharing class RoundRobinRepository extends AbstractCacheRepo {
       this.forceRefreshCache();
       this.accept(visitor, records);
     }
-    currentAssignment.LastUpdated__c = System.now();
-    upsert currentAssignment;
   }
 
   /** AbstractCacheRepo overrides */
@@ -105,6 +103,6 @@ public without sharing class RoundRobinRepository extends AbstractCacheRepo {
   }
 
   private static String getSentinelIndex() {
-    return User.SObjectType.getDescribe().getKeyPrefix() + '0'.repeat(12);
+    return null;
   }
 }

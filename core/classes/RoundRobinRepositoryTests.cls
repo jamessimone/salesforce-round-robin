@@ -23,10 +23,14 @@ private class RoundRobinRepositoryTests {
     upsert new RoundRobin__c(LastUpdated__c = someTimeAgo, Name = cacheKey);
     RoundRobinRepository repo = new RoundRobinRepository();
 
-    repo.accept(new VisitorMock(), new List<SObject>());
-    repo.accept(new VisitorMock(), new List<SObject>());
+    Lead firstLead = new Lead();
+    Lead secondLead = new Lead();
 
-    System.assert(true, 'Should make it here');
+    repo.accept(new VisitorMock(), new List<SObject>{ firstLead });
+    repo.accept(new VisitorMock(), new List<SObject>{ secondLead });
+
+    RoundRobin__c updatedAssignment = [SELECT Id, Index__c FROM RoundRobin__c];
+    System.assertEquals(UserInfo.getUserId(), updatedAssignment.Index__c);
   }
 
   private class VisitorMock implements IThreadSafeCacheVisitor {
@@ -35,7 +39,7 @@ private class RoundRobinRepositoryTests {
     }
     @SuppressWarnings('PMD.EmptyStatementBlock')
     public void visitRecords(List<SObject> records, SObject currentCacheRecord) {
-      // no-op
+      currentCacheRecord.put('Index__c', UserInfo.getUserId());
     }
   }
 }
