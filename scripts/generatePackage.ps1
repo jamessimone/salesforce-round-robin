@@ -85,9 +85,10 @@ function Generate() {
 
   Write-Host "Creating package version: $currentPackageVersion ..." -ForegroundColor White
 
-  $createPackageResult = npx sfdx force:package:version:create -p $packageName -w 30 -c -x -n $currentPackageVersion -a $currentPackageName --json | ConvertFrom-Json
+  $createPackageResult = npx sfdx force:package:version:create -p $packageName -w 30 -c -x --json | ConvertFrom-Json
   $currentPackageVersionId = $createPackageResult.result.SubscriberPackageVersionId
   if ($null -eq $currentPackageVersionId) {
+    Write-Host "Package create fail! Result: $createPackageResult" -ForegroundColor Red
     throw $createPackageResult
   } else {
     git add $sfdxProjectJsonPath

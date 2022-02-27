@@ -24,13 +24,6 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
   }
 
   private Cache.OrgPartition getPartition() {
-    Cache.OrgPartition partition;
-    try {
-      Cache.OrgPartition.validatePartitionName(this.getCachePartitionName());
-      partition = Cache.Org.getPartition(this.getCachePartitionName());
-    } catch (cache.Org.OrgCacheException orgCacheEx) {
-      partition = new Cache.OrgPartition(this.getCachePartitionName());
-    }
-    return partition;
+    return Cache.Org.getPartition(this.getCachePartitionName());
   }
 }

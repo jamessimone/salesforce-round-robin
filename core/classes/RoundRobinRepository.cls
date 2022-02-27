@@ -1,6 +1,6 @@
 public without sharing class RoundRobinRepository extends AbstractCacheRepo {
   private static Map<String, RoundRobin__c> CACHED_ASSIGNMENTS;
-  private static final String SENTINEL_USER_INDEX = getSentinelIndex();
+  private static final String SENTINEL_OWNER_INDEX = getSentinelIndex();
 
   @SuppressWarnings('PMD.ApexCRUDViolation')
   public void accept(IThreadSafeCacheVisitor visitor, List<SObject> records) {
@@ -93,7 +93,7 @@ public without sharing class RoundRobinRepository extends AbstractCacheRepo {
         Name = assignmentType,
         // some sentinel value
         LastUpdated__c = Datetime.newInstanceGmt(1970, 1, 1),
-        Index__c = SENTINEL_USER_INDEX
+        Index__c = SENTINEL_OWNER_INDEX
       )
     );
   }
