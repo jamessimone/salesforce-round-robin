@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: Rollup Release Status
+name: Round Robin Release Status
 
 on:
   push:

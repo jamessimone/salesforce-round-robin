@@ -24,9 +24,13 @@ function Update-Package-Install-Links {
 function Get-Is-Version-Promoted {
   param ($versionNumber, $packageName)
   $promotedPackageVersions = (npx sfdx force:package:version:list --released --packages $packageName --json | ConvertFrom-Json).result | Select-Object -ExpandProperty Version
-  $isPackagePromoted = $promotedPackageVersions.Contains($versionNumber)
-  Write-Host "Is $versionNumber for $packageName promoted? $isPackagePromoted" -ForegroundColor Yellow
-  return $isPackagePromoted
+  if ($null -eq $promotedPackageVersions) {
+    return $false
+  } else {
+    $isPackagePromoted = $promotedPackageVersions.Contains($versionNumber)
+    Write-Host "Is $versionNumber for $packageName promoted? $isPackagePromoted" -ForegroundColor Yellow
+    return $isPackagePromoted
+  }
 }
 
 function Get-Package-JSON {
@@ -54,7 +58,6 @@ function Get-Next-Package-Version() {
   }
   if ("salesforce-round-robin" -eq $packageName) {
     $versionNumberToWrite = $currentPackageVersion.Remove($currentPackageVersion.LastIndexOf(".0"))
-    Update-Logger-Class $versionNumberToWrite
     Write-Host "Bumping package.json version to: $versionNumberToWrite" -ForegroundColor Yellow
 
     $packageJson = Get-Package-JSON
@@ -78,13 +81,13 @@ function Generate() {
   $currentPackage = ($sfdxProjectJson.packageDirectories | Select-Object | Where-Object -Property package -eq $packageName)
   Get-Next-Package-Version $currentPackage $packageName
   $currentPackageVersion = $currentPackage.versionNumber
-  $currentPackageName = $currentPackage.versionName
 
   Write-Host "Creating package version: $currentPackageVersion ..." -ForegroundColor White
 
-  $createPackageResult = npx sfdx force:package:version:create -p $packageName -w 30 -c -x -n $currentPackageVersion -a $currentPackageName --json | ConvertFrom-Json
+  $createPackageResult = npx sfdx force:package:version:create -p $packageName -w 30 -c -x --json | ConvertFrom-Json
   $currentPackageVersionId = $createPackageResult.result.SubscriberPackageVersionId
   if ($null -eq $currentPackageVersionId) {
+    Write-Host "Package create fail! Result: $createPackageResult" -ForegroundColor Red
     throw $createPackageResult
   } else {
     git add $sfdxProjectJsonPath

@@ -8,3 +8,4 @@ DEVHUB_SFDX_URL.txt
 tests/apex
 **/main/default/
 coverage/
+.vscode

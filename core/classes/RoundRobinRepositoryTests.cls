@@ -17,13 +17,29 @@ private class RoundRobinRepositoryTests {
     );
   }
 
+  @IsTest
+  static void avoidsRecursiveUpdateIssues() {
+    Datetime someTimeAgo = System.now().addDays(-3);
+    upsert new RoundRobin__c(LastUpdated__c = someTimeAgo, Name = cacheKey);
+    RoundRobinRepository repo = new RoundRobinRepository();
+
+    Lead firstLead = new Lead();
+    Lead secondLead = new Lead();
+
+    repo.accept(new VisitorMock(), new List<SObject>{ firstLead });
+    repo.accept(new VisitorMock(), new List<SObject>{ secondLead });
+
+    RoundRobin__c updatedAssignment = [SELECT Id, Index__c FROM RoundRobin__c];
+    System.assertEquals(UserInfo.getUserId(), updatedAssignment.Index__c);
+  }
+
   private class VisitorMock implements IThreadSafeCacheVisitor {
     public String getVisitKey() {
       return cacheKey;
     }
     @SuppressWarnings('PMD.EmptyStatementBlock')
     public void visitRecords(List<SObject> records, SObject currentCacheRecord) {
-      // no-op
+      currentCacheRecord.put('Index__c', UserInfo.getUserId());
     }
   }
 }

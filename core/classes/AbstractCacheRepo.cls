@@ -4,7 +4,7 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
   }
 
   public void updateCache(Object cachedItem) {
-    this.getPartition().put(this.getCacheKey(), cachedItem);
+    this.getPartition()?.put(this.getCacheKey(), cachedItem);
   }
 
   protected abstract String getCachePartitionName();
@@ -12,8 +12,14 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
   protected abstract Object populateCache();
 
   protected Object getFromCache() {
-    Cache.OrgPartition partition = this.getPartition();
-    return partition.get(this.getCacheBuilder(), this.getCacheKey());
+    Object cachedItem = this.getPartition()?.get(this.getCacheBuilder(), this.getCacheKey());
+    if (cachedItem == null) {
+      // the item is only null when there's an issue with the packaging org not properly
+      // creating the cache partition; in this case, we "know" what the value will be
+      // and can manually load it
+      cachedItem = this.populateCache();
+    }
+    return cachedItem;
   }
 
   protected virtual Type getCacheBuilder() {
@@ -23,13 +29,14 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
     return Type.forName(className);
   }
 
-  private Cache.OrgPartition getPartition() {
+@SuppressWarnings('PMD.EmptyCatchBlock')
+private Cache.OrgPartition getPartition() {
     Cache.OrgPartition partition;
     try {
-      Cache.OrgPartition.validatePartitionName(this.getCachePartitionName());
       partition = Cache.Org.getPartition(this.getCachePartitionName());
     } catch (cache.Org.OrgCacheException orgCacheEx) {
-      partition = new Cache.OrgPartition(this.getCachePartitionName());
+      // do nothing - there seem to be some timing dependencies on when
+      // it's possible to use Platform Cache while packaging.
     }
     return partition;
   }

@@ -1,10 +1,10 @@
 {
   "name": "salesforce-round-robin",
   "version": "0.0.1",
-  "description": "Round robin records in Salesforce (SFDC) in Flow & Apex",
+  "description": "Round robin records in Salesforce (SFDC) using Flow or Apex. Performant, fair, fast assignment with configurable user pools",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamessimone/apex-rollup"
+    "url": "https://github.com/jamessimone/salesforce-round-robin"
   },
   "author": "james.simone",
   "license": "MIT",
@@ -21,12 +21,12 @@
     "flow"
   ],
   "scripts": {
-    "create:package:round:robin": "pwsh -Command \"&{ . ./scripts/generatePackage.ps1; Generate -PackageName '\"round-robin-assigner\"' -ReadmePath \"./README.md\" }\"",
+    "create:package:round:robin": "pwsh -Command \"&{ . ./scripts/generatePackage.ps1; Generate -PackageName '\"salesforce-round-robin\"' -ReadmePath \"./README.md\" }\"",
     "prepare": "sfdx plugins:link ./node_modules/@salesforce/sfdx-scanner",
     "prettier": "prettier",
     "scan": "sfdx scanner:run --pmdconfig config/pmd-ruleset.xml --target . --engine pmd --severity-threshold 3",
     "test": "npm run test:apex",
-    "test:apex": "sh ./scripts/runLocalTests.sh",
+    "test:apex": "sfdx force:apex:test:run -w 10",
     "test:lwc": "echo No LWCs so far!"
   }
 }

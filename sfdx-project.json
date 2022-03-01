@@ -8,12 +8,16 @@
             "versionNumber": "0.0.1.0",
             "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
             "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
+        },
+        {
+            "path": "integration-tests"
         }
     ],
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "54.0",
     "packageAliases": {
-        "salesforce-round-robin": "0Ho6g000000GnClCAK"
+        "salesforce-round-robin": "0Ho6g000000GnClCAK",
+        "salesforce-round-robin@0.0.1-0": "04t6g000008SjNvAAK"
     }
 }
