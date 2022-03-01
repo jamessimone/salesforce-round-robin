@@ -81,7 +81,6 @@ function Generate() {
   $currentPackage = ($sfdxProjectJson.packageDirectories | Select-Object | Where-Object -Property package -eq $packageName)
   Get-Next-Package-Version $currentPackage $packageName
   $currentPackageVersion = $currentPackage.versionNumber
-  $currentPackageName = $currentPackage.versionName
 
   Write-Host "Creating package version: $currentPackageVersion ..." -ForegroundColor White
 

@@ -26,7 +26,7 @@
     "prettier": "prettier",
     "scan": "sfdx scanner:run --pmdconfig config/pmd-ruleset.xml --target . --engine pmd --severity-threshold 3",
     "test": "npm run test:apex",
-    "test:apex": "sh ./scripts/runLocalTests.sh",
+    "test:apex": "sfdx force:apex:test:run -w 10",
     "test:lwc": "echo No LWCs so far!"
   }
 }
