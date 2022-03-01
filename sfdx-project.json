@@ -2,10 +2,11 @@
     "packageDirectories": [
         {
             "default": true,
+            "definitionFile": "config/project-scratch-def.json",
             "package": "salesforce-round-robin",
             "path": "core",
-            "versionName": "Initial Round Robin release",
-            "versionNumber": "0.0.1.0",
+            "versionName": "Initial release with corrected packaging/caching settings",
+            "versionNumber": "0.0.2.0",
             "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
             "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
         },

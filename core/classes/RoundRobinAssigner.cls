@@ -6,10 +6,20 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
   private static final Integer SENTINEL_INDEX = -1;
   private static final String OWNER_ID = 'OwnerId';
 
+  /**
+   * @description Implement this interface to define an assignment "pool"
+   * for round robin assigning owners to records
+   */
   public interface IAssignmentRepo {
     List<Id> getAssignmentIds(String assignmentType);
   }
 
+  /**
+   * @description Data object designed to encapsulate one to two properties associated with assignment
+   * - assignmentType: also used as the cache key, this property is configurable
+   * (in Flow, defaults to SObjectType.OwnerFieldName)
+   * - ownerField: (optional), defaults to OwnerId
+   */
   public class Details {
     public String assignmentType { get; set; }
     public String ownerField {
