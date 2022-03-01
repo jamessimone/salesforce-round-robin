@@ -46,6 +46,7 @@ public without sharing class RoundRobinRepository extends AbstractCacheRepo {
     this.updateCache(CACHED_ASSIGNMENTS);
   }
 
+  @SuppressWarnings('PMD.ApexCRUDViolation')
   private Boolean commitUpdatedAssignment(RoundRobin__c assignment) {
     Boolean wasCommitSuccessful = true;
     Map<String, RoundRobin__c> currentCache = this.getCachedAssignments();

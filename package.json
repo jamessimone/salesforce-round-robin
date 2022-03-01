@@ -4,7 +4,7 @@
   "description": "Round robin records in Salesforce (SFDC) using Flow or Apex. Performant, fair, fast assignment with configurable user pools",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamessimone/apex-rollup"
+    "url": "https://github.com/jamessimone/salesforce-round-robin"
   },
   "author": "james.simone",
   "license": "MIT",
