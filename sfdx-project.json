@@ -5,7 +5,7 @@
             "definitionFile": "config/project-scratch-def.json",
             "package": "salesforce-round-robin",
             "path": "core",
-            "versionName": "Initial release with corrected packaging/caching settings",
+            "versionName": "Initial release with corrected packaging/caching settings. Added single record input to Invocable.",
             "versionNumber": "0.0.2.0",
             "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
             "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
@@ -19,6 +19,7 @@
     "sourceApiVersion": "54.0",
     "packageAliases": {
         "salesforce-round-robin": "0Ho6g000000GnClCAK",
-        "salesforce-round-robin@0.0.1-0": "04t6g000008SjNvAAK"
+        "salesforce-round-robin@0.0.1-0": "04t6g000008SjNvAAK",
+        "salesforce-round-robin@0.0.2-0": "04t6g000008SjOFAA0"
     }
 }

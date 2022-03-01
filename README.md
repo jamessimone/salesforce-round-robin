@@ -5,12 +5,12 @@
 
 ## Deployment
 
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008SjNvAAK">
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008SjOFAA0">
   <img alt="Deploy to Salesforce"
        src="./media/deploy-package-to-prod.png">
 </a>
 
-<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008SjNvAAK">
+<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008SjOFAA0">
   <img alt="Deploy to Salesforce Sandbox"
        src="./media/deploy-package-to-sandbox.png">
 </a>
@@ -44,7 +44,8 @@ And then the configuration for the action:
 - `Owner Field API Name - defaults to OwnerId` (optional) - which field are you looking to assign to? Not all objects have `OwnerId` as a field (the detail side of M/D relationships, for instance). Use the field's API Name for these cases.
 - `Query Id Field - defaults to Id if not supplied` (optional) - used in conjunction with the `Query To Retrieve Possible Assignees` property, below. If you are using the round robin assigner to assign lookup fields _other_ than `OwnerId`, this allows you to override which field is pulled off of the records that the `Query To Retrieve Possible Assignees` returns.
 - `Query To Retrieve Possible Assignees` (optional) - either this or `Alternative to query ...` must be provided! This query will pull back records - like Users - and grab their `Id` field (or the field stipulated using the `Query Id Field ...` property) that should be included in the "ownership pool" for the given round robin.
-- `Records To Round Robin` (optional, but should always be supplied) - set this equal to a collection variable that is either the output of a `Get Records` call, contains `$Record` in a Record-Triggered flow, etc ...
+- `Records to round robin - either this or single record is required` (optional) - set this equal to a collection variable that is either the output of a `Get Records` call, contains `$Record` in a Record-Triggered flow, etc ...
+- `Single record to round robin - either this or records to round robin is required` (optional) - for Record-Triggered Flows, skip assigning `$Record` to a collection variable and just pass it directly using this input property!
 - `Update records - defaults to false` (optional) - by default, the collection supplied via the `Records To Round Robin` property aren't updated; set this to `{!$GlobalConstant.True}` to have the action update your records with their newly assigned owners
 
 ## Round Robin Assignment From Apex

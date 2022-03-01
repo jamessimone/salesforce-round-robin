@@ -7,7 +7,7 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
   private static final String OWNER_ID = 'OwnerId';
 
   /**
-   * @description Implement this interface to define an assignment "pool"
+   * Implement this interface to define an assignment "pool"
    * for round robin assigning owners to records
    */
   public interface IAssignmentRepo {
@@ -15,10 +15,11 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
   }
 
   /**
-   * @description Data object designed to encapsulate one to two properties associated with assignment
-   * - assignmentType: also used as the cache key, this property is configurable
-   * (in Flow, defaults to SObjectType.OwnerFieldName)
-   * - ownerField: (optional), defaults to OwnerId
+   * Data object designed to encapsulate one to two properties associated with assignment
+   * - assignmentType: also used as the cache key, this property is configurable.
+   *   In Flow, defaults to `SObjectType.OwnerFieldName`  (e.g. `Lead.OwnerId`)
+   * - ownerField: (optional), defaults to `OwnerId`. IT's not necessary for this field to be part of the cache key,
+   *   but it might be a nice way to differentiate entries in the cache in a consistent way
    */
   public class Details {
     public String assignmentType { get; set; }

@@ -38,7 +38,7 @@ private class FlowRoundRobinAssignerTests {
     Exception ex;
     try {
       FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
-    } catch(System.IllegalArgumentException e) {
+    } catch (System.IllegalArgumentException e) {
       ex = e;
     }
 
@@ -54,11 +54,22 @@ private class FlowRoundRobinAssignerTests {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.updateRecords = true;
     input.recordsToRoundRobin = new List<ContactPointAddress>{ cpa };
-    input.queryToRetrieveAssignees =  'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
+    input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
     System.assertEquals(true, FlowRoundRobinAssigner.hasBeenUpdated);
     System.assertEquals(UserInfo.getUserId(), cpa.OwnerId);
+  }
+
+  @IsTest
+  static void singleRecordRoundRobins() {
+    FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
+    input.recordToRoundRobin = new ContactPointAddress();
+    input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
+
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+
+    System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
   }
 }
