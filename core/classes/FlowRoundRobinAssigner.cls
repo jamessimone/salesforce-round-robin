@@ -16,8 +16,10 @@ global without sharing class FlowRoundRobinAssigner {
     global String queryIdField = 'Id';
     @InvocableVariable(label='Owner Field API Name - defaults to OwnerId')
     global String ownerFieldApiName = 'OwnerId';
-    @InvocableVariable(label='Records to round robin')
+    @InvocableVariable(label='Records to round robin - either this or single record is required')
     global List<SObject> recordsToRoundRobin = new List<SObject>();
+    @InvocableVariable(label='Single record to round robin - either this or records to round robin is required')
+    global SObject recordToRoundRobin;
     @InvocableVariable(label='Update records - defaults to false')
     global Boolean updateRecords = false;
   }
@@ -25,7 +27,7 @@ global without sharing class FlowRoundRobinAssigner {
   @InvocableMethod(category='Round Robin' label='Round robin records')
   global static void assign(List<FlowInput> flowInputs) {
     for (FlowInput input : flowInputs) {
-      if (input.recordsToRoundRobin?.isEmpty() == false) {
+      if (input.recordsToRoundRobin?.isEmpty() == false || input.recordToRoundRobin != null) {
         SELF.trackAssignedIds(input);
         SELF.roundRobin(input);
       }
@@ -48,6 +50,9 @@ global without sharing class FlowRoundRobinAssigner {
       throw new IllegalArgumentException(
         'Query To Retrieve Possible Assignees or API name of class implementing RoundRobinAssigner.IAssignment repo is required!'
       );
+    }
+    if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
+      input.recordsToRoundRobin = new List<SObject>{ input.recordToRoundRobin };
     }
   }
 

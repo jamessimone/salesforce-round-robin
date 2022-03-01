@@ -7,6 +7,15 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
     this.getPartition()?.put(this.getCacheKey(), cachedItem);
   }
 
+  /**
+   * We want to prevent downstream consumers from overriding `toString()`
+   * because otherwise they can break the way `getCacheBuilder()` works
+   * within this class
+   */
+  public override String toString() {
+    return super.toString();
+  }
+
   protected abstract String getCachePartitionName();
   protected abstract String getCacheKey();
   protected abstract Object populateCache();
@@ -29,8 +38,8 @@ public abstract class AbstractCacheRepo implements Cache.CacheBuilder {
     return Type.forName(className);
   }
 
-@SuppressWarnings('PMD.EmptyCatchBlock')
-private Cache.OrgPartition getPartition() {
+  @SuppressWarnings('PMD.EmptyCatchBlock')
+  private Cache.OrgPartition getPartition() {
     Cache.OrgPartition partition;
     try {
       partition = Cache.Org.getPartition(this.getCachePartitionName());

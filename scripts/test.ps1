@@ -73,8 +73,8 @@ if($shouldDeployToSandbox) {
   try {
     # Deploy
     Write-Debug "Deploying source to sandbox ..."
-    npx sfdx force:source:deploy -p rollup
-    npx sfdx force:source:deploy -p extra-tests
+    npx sfdx force:source:deploy -p core
+    npx sfdx force:source:deploy -p integration-tests
     Start-Tests
   } catch {
     throw 'Error deploying to sandbox!'
