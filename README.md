@@ -57,8 +57,10 @@ Here are a few ways that you can perform assignments:
 - You can call use the bundled `QueryAssigner`:
 
   ```java
-    // in a Trigger/ trigger handler class
-    RoundRobinAssigner.IAssignmentRepo queryRepo = new QueryAssigner('SELECT Id FROM User WHERE Some_Condition__c = true', 'Id');
+    // in a Trigger / trigger handler class
+    RoundRobinAssigner.IAssignmentRepo queryRepo = new QueryAssigner(
+      'SELECT Id FROM User WHERE Some_Condition__c = true', 'Id'
+    );
     RoundRobinAssigner.Details assignmentDetails = new RoundRobinAssigner.Details();
     assignmentDetails.assignmentType = 'this is the cache key';
     new RoundRobinAssigner(queryRepo, assignmentDetails).assignOwners(someListOfSObjectsToBeAssigned);
