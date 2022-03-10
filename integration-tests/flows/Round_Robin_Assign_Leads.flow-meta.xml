@@ -11,6 +11,10 @@
             <typeName>T__recordsToRoundRobin</typeName>
             <typeValue>Lead</typeValue>
         </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__recordToRoundRobin</typeName>
+            <typeValue>Lead</typeValue>
+        </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>queryToRetrieveAssignees</name>

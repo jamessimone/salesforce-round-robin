@@ -53,13 +53,15 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
     List<Id> assignmentIds = this.assignmentRepo.getAssignmentIds(this.details.assignmentType);
     Set<Id> activeAssignmentIds = new Set<Id>(assignmentIds);
     Integer nextAssignmentIndex = this.getNextAssignmentIndex(assignmentIds, cachedAssignment);
-    for (SObject record : records) {
-      Id ownerId = (Id) record.get(this.details.ownerField);
-      Id nextOwnerId = assignmentIds[nextAssignmentIndex];
-      if (ownerId == null || activeAssignmentIds.contains(ownerId) == false || nextOwnerId == ownerId) {
-        record.put(OWNER_ID, nextOwnerId);
-        cachedAssignment.Index__c = nextOwnerId;
-        nextAssignmentIndex = nextAssignmentIndex == assignmentIds.size() - 1 ? 0 : nextAssignmentIndex + 1;
+    if (assignmentIds.isEmpty() == false) {
+      for (SObject record : records) {
+        Id ownerId = (Id) record.get(this.details.ownerField);
+        Id nextOwnerId = assignmentIds[nextAssignmentIndex];
+        if (ownerId == null || activeAssignmentIds.contains(ownerId) == false || nextOwnerId == ownerId) {
+          record.put(OWNER_ID, nextOwnerId);
+          cachedAssignment.Index__c = nextOwnerId;
+          nextAssignmentIndex = nextAssignmentIndex == assignmentIds.size() - 1 ? 0 : nextAssignmentIndex + 1;
+        }
       }
     }
   }
