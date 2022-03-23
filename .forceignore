@@ -1,0 +1,4 @@
+# .forceignore v2
+**/jsconfig.json
+**/.eslintrc.json
+**/__tests__
