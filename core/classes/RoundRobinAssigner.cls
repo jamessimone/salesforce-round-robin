@@ -18,7 +18,7 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
    * Data object designed to encapsulate one to two properties associated with assignment
    * - assignmentType: also used as the cache key, this property is configurable.
    *   In Flow, defaults to `SObjectType.OwnerFieldName`  (e.g. `Lead.OwnerId`)
-   * - ownerField: (optional), defaults to `OwnerId`. IT's not necessary for this field to be part of the cache key,
+   * - ownerField: (optional), defaults to `OwnerId`. It's not necessary for this field to be part of the cache key,
    *   but it might be a nice way to differentiate entries in the cache in a consistent way
    */
   public class Details {

@@ -5,8 +5,8 @@
             "definitionFile": "config/project-scratch-def.json",
             "package": "salesforce-round-robin",
             "path": "core",
-            "versionName": "Better error handling when assignment Ids don't exist",
-            "versionNumber": "0.0.4.0",
+            "versionName": "Guaranteed write-safety for dueling transactions",
+            "versionNumber": "0.1.0.0",
             "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
             "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
         },
