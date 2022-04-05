@@ -1,6 +1,6 @@
 {
   "name": "salesforce-round-robin",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Round robin records in Salesforce (SFDC) using Flow or Apex. Performant, fair, fast assignment with configurable user pools",
   "repository": {
     "type": "git",
