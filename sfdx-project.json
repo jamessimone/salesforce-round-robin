@@ -20,6 +20,7 @@
     "packageAliases": {
         "salesforce-round-robin": "0Ho6g000000GnClCAK",
         "salesforce-round-robin@0.0.4-0": "04t6g000008SjZEAA0",
-        "salesforce-round-robin@0.1.0-0": "04t6g000008SjpyAAC"
+        "salesforce-round-robin@0.1.0-0": "04t6g000008SjpyAAC",
+        "salesforce-round-robin@0.1.1-0": "04t6g000008fjhFAAQ"
     }
 }
