@@ -5,8 +5,8 @@
             "definitionFile": "config/project-scratch-def.json",
             "package": "salesforce-round-robin",
             "path": "core",
-            "versionName": "Guaranteed write-safety for dueling transactions",
-            "versionNumber": "0.1.0.0",
+            "versionName": "Reverts mutex due to bulkification issues with Flow, adds more safety for recursive Flow transactions",
+            "versionNumber": "0.1.1.0",
             "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
             "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
         },
@@ -16,12 +16,9 @@
     ],
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "54.0",
+    "sourceApiVersion": "57.0",
     "packageAliases": {
         "salesforce-round-robin": "0Ho6g000000GnClCAK",
-        "salesforce-round-robin@0.0.1-0": "04t6g000008SjNvAAK",
-        "salesforce-round-robin@0.0.2-0": "04t6g000008SjOFAA0",
-        "salesforce-round-robin@0.0.3-0": "04t6g000008SjREAA0",
         "salesforce-round-robin@0.0.4-0": "04t6g000008SjZEAA0",
         "salesforce-round-robin@0.1.0-0": "04t6g000008SjpyAAC"
     }

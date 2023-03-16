@@ -26,10 +26,15 @@ global without sharing class FlowRoundRobinAssigner {
 
   @InvocableMethod(category='Round Robin' label='Round robin records')
   global static void assign(List<FlowInput> flowInputs) {
-    for (FlowInput input : flowInputs) {
-      if (input.recordsToRoundRobin?.isEmpty() == false || input.recordToRoundRobin != null) {
-        SELF.trackAssignedIds(input);
-        SELF.roundRobin(input);
+    if (hasBeenUpdated == false) {
+      for (FlowInput input : flowInputs) {
+        if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
+          input.recordsToRoundRobin = new List<SObject>{ input.recordToRoundRobin };
+        }
+        if (input.recordsToRoundRobin.isEmpty() == false) {
+          SELF.trackAssignedIds(input);
+          SELF.roundRobin(input);
+        }
       }
     }
   }

@@ -35,7 +35,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>54.0</apiVersion>
+    <apiVersion>57.0</apiVersion>
     <assignments>
         <name>Add_Current_Record_to_Collection</name>
         <label>Add Current Record to Collection</label>

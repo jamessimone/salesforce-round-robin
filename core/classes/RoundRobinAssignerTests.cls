@@ -63,7 +63,7 @@ private class RoundRobinAssignerTests {
 
   static List<User> createUsersForAssignment(String assignmentType) {
     List<User> users = new List<User>();
-    String baseIdString = Schema.User.SObjectType.getDescribe().getKeyPrefix() + '0'.repeat(11);
+    String baseIdString = Schema.User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(11);
     for (Integer index = 0; index < 2; index++) {
       users.add(new User(Department = assignmentType, Id = baseIdString + (index + 1)));
     }

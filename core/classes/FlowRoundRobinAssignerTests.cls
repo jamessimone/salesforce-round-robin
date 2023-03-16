@@ -1,6 +1,8 @@
 @IsTest
 private class FlowRoundRobinAssignerTests {
-  static final User FAKE_USER = new User(Id = User.SObjectType.getDescribe().getKeyPrefix() + '0'.repeat(12));
+  static final User FAKE_USER = new User(
+    Id = User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(12)
+  );
 
   @IsTest
   static void defaultAssignmentToOwnerId() {
