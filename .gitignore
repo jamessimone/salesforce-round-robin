@@ -2,6 +2,7 @@
 node_modules/
 yarn.lock
 .sfdx/
+.sf/
 .localdevserver/
 debug.log
 DEVHUB_SFDX_URL.txt
