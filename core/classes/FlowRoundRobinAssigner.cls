@@ -1,8 +1,6 @@
 global without sharing class FlowRoundRobinAssigner {
   @TestVisible
   private static RoundRobinAssigner.IAssignmentRepo stubAssignmentRepo;
-  @TestVisible
-  private static Boolean hasBeenUpdated = false;
 
   private static final Set<Id> PROCESSED_RECORD_IDS = new Set<Id>();
   private static final FlowRoundRobinAssigner SELF = new FlowRoundRobinAssigner();
@@ -26,16 +24,23 @@ global without sharing class FlowRoundRobinAssigner {
 
   @InvocableMethod(category='Round Robin' label='Round robin records')
   global static void assign(List<FlowInput> flowInputs) {
-    if (hasBeenUpdated == false) {
-      for (FlowInput input : flowInputs) {
-        if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
-          input.recordsToRoundRobin = new List<SObject>{ input.recordToRoundRobin };
-        }
-        if (input.recordsToRoundRobin.isEmpty() == false) {
-          SELF.trackAssignedIds(input);
-          SELF.roundRobin(input);
-        }
+    FlowInput bulkifiedInput;
+    for (FlowInput input : flowInputs) {
+      if (bulkifiedInput == null) {
+        bulkifiedInput = input;
       }
+      if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
+        input.recordsToRoundRobin = new List<SObject>{ input.recordToRoundRobin };
+      }
+      bulkifiedInput.recordsToRoundRobin.addAll(input.recordsToRoundRobin);
+    }
+
+    if (bulkifiedInput?.recordsToRoundRobin.isEmpty() == false) {
+      SELF.trackAssignedIds(bulkifiedInput);
+      SELF.roundRobin(bulkifiedInput);
+    }
+    if (bulkifiedInput?.updateRecords == true) {
+      update bulkifiedInput.recordsToRoundRobin;
     }
   }
 
@@ -44,10 +49,6 @@ global without sharing class FlowRoundRobinAssigner {
     RoundRobinAssigner.IAssignmentRepo assignmentRepo = this.getAssignmentRepo(input);
     RoundRobinAssigner.Details assignmentDetails = this.getAssignmentDetails(input);
     new RoundRobinAssigner(assignmentRepo, assignmentDetails).assignOwners(input.recordsToRoundRobin);
-    if (input.updateRecords) {
-      update input.recordsToRoundRobin;
-      hasBeenUpdated = true;
-    }
   }
 
   private void validateInput(FlowInput input) {

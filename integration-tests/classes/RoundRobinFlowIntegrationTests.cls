@@ -14,10 +14,16 @@ private class RoundRobinFlowIntegrationTests {
     roundRobinUser.LastName = 'roundRobinUser';
     insert roundRobinUser;
 
-    Lead lead = new Lead(LastName = 'Test Assignment', Company = 'Test');
-    insert lead;
+    List<Lead> leads = new List<Lead>();
+    // stress test!
+    for (Integer index = 0; index < 200; index++) {
+      leads.add(new Lead(LastName = 'Assignment ' + index, Company = 'Round Robin'));
+    }
+    insert leads;
 
-    lead = [SELECT Id, OwnerId FROM Lead];
-    System.assertEquals(roundRobinUser.Id, lead.OwnerId);
+    leads = [SELECT Id, OwnerId FROM Lead];
+    for (Lead lead : leads) {
+      System.assertEquals(roundRobinUser.Id, lead.OwnerId);
+    }
   }
 }

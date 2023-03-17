@@ -60,7 +60,6 @@ private class FlowRoundRobinAssignerTests {
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
-    System.assertEquals(true, FlowRoundRobinAssigner.hasBeenUpdated);
     System.assertEquals(UserInfo.getUserId(), cpa.OwnerId);
   }
 
