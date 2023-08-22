@@ -4,10 +4,8 @@ public without sharing class QueryAssigner implements RoundRobinAssigner.IAssign
 
   public QueryAssigner(String query, String assignmentFieldName) {
     Set<Id> assignmentIds = new Set<Id>();
-    List<SObject> matchingRecords;
-    if (QUERY_TO_RECORDS.containsKey(query)) {
-      matchingRecords = QUERY_TO_RECORDS.get(query);
-    } else {
+    List<SObject> matchingRecords = QUERY_TO_RECORDS.get(query);
+    if (matchingRecords == null) {
       matchingRecords = Database.query(query);
       QUERY_TO_RECORDS.put(query, matchingRecords);
     }

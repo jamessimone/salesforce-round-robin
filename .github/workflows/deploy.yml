@@ -42,23 +42,12 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: 'Setup node'
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '18.17.0'
+          cache: 'npm'
 
-      - name: 'Restore node_modules cache'
-        id: cache-npm
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ env.cache-name }}-
-            npm-
-
-      - name: 'Install NPM'
-        if: steps.cache-npm.outputs.cache-hit != 'true'
-        run: npm ci
+      - run: npm ci
 
       - name: 'Run LWC Unit Tests'
         run: npm run test:lwc
