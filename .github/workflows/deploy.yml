@@ -46,7 +46,8 @@ jobs:
         with:
           node-version: '18.17.0'
           cache: 'npm'
-        run: npm ci
+
+      - run: npm ci
 
       - name: 'Run LWC Unit Tests'
         run: npm run test:lwc
