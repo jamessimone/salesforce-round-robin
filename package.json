@@ -9,10 +9,10 @@
   "author": "james.simone",
   "license": "MIT",
   "devDependencies": {
-    "@salesforce/sfdx-scanner": "latest",
-    "prettier-plugin-apex": "latest",
+    "@salesforce/cli": "latest",
+    "@salesforce/sfdx-scanner": "^3.15.0",
     "prettier": "latest",
-    "sfdx-cli": "latest"
+    "prettier-plugin-apex": "latest"
   },
   "keywords": [
     "salesforce",
@@ -22,11 +22,11 @@
   ],
   "scripts": {
     "create:package:round:robin": "pwsh -Command \"&{ . ./scripts/generatePackage.ps1; Generate -PackageName '\"salesforce-round-robin\"' -ReadmePath \"./README.md\" }\"",
-    "prepare": "sfdx plugins:link ./node_modules/@salesforce/sfdx-scanner",
+    "prepare": "sf plugins link ./node_modules/@salesforce/sfdx-scanner",
     "prettier": "prettier",
-    "scan": "sfdx scanner:run --pmdconfig config/pmd-ruleset.xml --target . --engine pmd --severity-threshold 3",
+    "scan": "sf scanner run --pmdconfig config/pmd-ruleset.xml --target . --engine pmd --severity-threshold 3",
     "test": "npm run test:apex",
-    "test:apex": "sfdx force:apex:test:run -s RoundRobinTestSuite -w 10",
+    "test:apex": "sf apex test run -s RoundRobinTestSuite -w 10",
     "test:lwc": "echo No LWCs so far!"
   }
 }
