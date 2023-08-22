@@ -57,8 +57,14 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
       for (SObject record : records) {
         Id ownerId = (Id) record.get(this.details.ownerField);
         Id nextOwnerId = assignmentIds[nextAssignmentIndex];
-        if (ownerId == null || activeAssignmentIds.contains(ownerId) == false || nextOwnerId == ownerId) {
-          record.put(OWNER_ID, nextOwnerId);
+        if (
+          ownerId == null ||
+          activeAssignmentIds.contains(ownerId) == false ||
+          nextOwnerId == ownerId ||
+          // edge case: the running user is part of the queue
+          ownerId == UserInfo.getUserId()
+        ) {
+          record.put(this.details.ownerField, nextOwnerId);
           cachedAssignment.Index__c = nextOwnerId;
           nextAssignmentIndex = nextAssignmentIndex == assignmentIds.size() - 1 ? 0 : nextAssignmentIndex + 1;
         }
