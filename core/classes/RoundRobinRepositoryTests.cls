@@ -37,7 +37,6 @@ private class RoundRobinRepositoryTests {
     public String getVisitKey() {
       return cacheKey;
     }
-    @SuppressWarnings('PMD.EmptyStatementBlock')
     public void visitRecords(List<SObject> records, SObject currentCacheRecord) {
       currentCacheRecord.put('Index__c', UserInfo.getUserId());
     }

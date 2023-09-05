@@ -5,12 +5,12 @@
 
 ## Deployment
 
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6lwAAC">
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6s5AAC">
   <img alt="Deploy to Salesforce"
        src="./media/deploy-package-to-prod.png">
 </a>
 
-<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6lwAAC">
+<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6s5AAC">
   <img alt="Deploy to Salesforce Sandbox"
        src="./media/deploy-package-to-sandbox.png">
 </a>
@@ -63,7 +63,7 @@ Here are a few ways that you can perform assignments:
       'SELECT Id FROM User WHERE Some_Condition__c = true', 'Id'
     );
     RoundRobinAssigner.Details assignmentDetails = new RoundRobinAssigner.Details();
-    assignmentDetails.assignmentType = 'this is the cache key';
+    assignmentDetails.assignmentType = 'cacheKeyMustBeAlphanumeric';
     new RoundRobinAssigner(queryRepo, assignmentDetails).assignOwners(someListOfSObjectsToBeAssigned);
   ```
 
