@@ -5,12 +5,12 @@
 
 ## Deployment
 
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6lwAAC">
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6sAAAS">
   <img alt="Deploy to Salesforce"
        src="./media/deploy-package-to-prod.png">
 </a>
 
-<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6lwAAC">
+<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008C6sAAAS">
   <img alt="Deploy to Salesforce Sandbox"
        src="./media/deploy-package-to-sandbox.png">
 </a>
@@ -23,7 +23,7 @@ Between Assignment Rules and OmniChannel, there are plenty of out-of-the-box opt
 Here are some of the benefits to using this package:
 
 - Ease of setup. All you have to supply (via Flow or Apex) is which records qualify to be part of the round robin (e.g. which records are part of the "ownership pool") and the records you'd like to have owners assigned
-- Speed and transactional safety - there are many pitfalls with naive round robin implementations, but the biggest one is unfair assignment (where some owners receive more records than others). This skew is typically caused by the tracking for how owners have been assigned getting out of date with how many records each person has already received. This package takes advantage of Salesforce's Platform Cache to offer truly fair assignment.
+- Speed and transactional safety - there are many pitfalls with naive round robin implementations, but the biggest one is unfair assignment (where some owners receive more records than others). This skew is typically caused by the tracking for how owners have been assigned getting out of date with how many records each person has already received. This package offers truly fair assignment across transactions
 
 ## Round Robin Assignment From Flow
 
@@ -63,7 +63,7 @@ Here are a few ways that you can perform assignments:
       'SELECT Id FROM User WHERE Some_Condition__c = true', 'Id'
     );
     RoundRobinAssigner.Details assignmentDetails = new RoundRobinAssigner.Details();
-    assignmentDetails.assignmentType = 'this is the cache key';
+    assignmentDetails.assignmentType = 'cacheKeyMustBeAlphanumeric';
     new RoundRobinAssigner(queryRepo, assignmentDetails).assignOwners(someListOfSObjectsToBeAssigned);
   ```
 
@@ -84,9 +84,3 @@ public interface IAssignmentRepo {
 The `assignmentType` property that comes from the invocable action (`FlowRoundRobinAssigner`) is always the `Object Type.Field Name`; so something like `Lead.OwnerId` for a typical Lead round robin.
 
 Note that the records are _not_ updated by default in `RoundRobinAssigner`; if you are updating a related list of records (where updating them in a `BEFORE_UPDATED` context wouldn't just persist the updated ownership values by default), you should call `update` or `Database.update` on the records after calling the assigner.
-
-## Additional Details & Architectural Notes
-
-Again, this package employs the usage of Platform Cache to ensure fairness across competing transactions. This means that Platform Cache must be _enabled_ in your org in order to successfully install the round robin package. By default, it creates a 1 MB partition within your org cache. That should be plenty for most use-cases; if you have a ton of _different_ round robin assignments you may need to bump that amount up in:
-
-- Setup -> Platform Cache -> Click "Edit" on the `RoundRobinCache` record -> Bump the amount to 2 under the `Provider Free` section
