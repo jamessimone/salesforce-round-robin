@@ -62,9 +62,9 @@ public without sharing class RoundRobinRepository {
         }
         lockedAssignment.Index__c = assignment.Index__c;
         lockedAssignment.LastUpdated__c = assignment.LastUpdated__c;
+        // purely for the map assignment, below
         assignment = lockedAssignment;
         this.write(assignment);
-        // purely for the map assignment, below
       } catch (DmlException ex) {
         return false;
       }
