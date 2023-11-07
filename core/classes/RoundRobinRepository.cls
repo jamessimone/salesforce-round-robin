@@ -62,17 +62,26 @@ public without sharing class RoundRobinRepository {
         }
         lockedAssignment.Index__c = assignment.Index__c;
         lockedAssignment.LastUpdated__c = assignment.LastUpdated__c;
-        update lockedAssignment;
-        // purely for the map assignment, below
         assignment = lockedAssignment;
+        this.write(assignment);
+        // purely for the map assignment, below
       } catch (DmlException ex) {
         return false;
       }
     } else {
-      insert assignment;
+      this.write(assignment);
     }
 
     CACHED_ASSIGNMENTS.put(assignment.Name, assignment);
     return true;
+  }
+
+  private void write(RoundRobin__c setting) {
+    // field truncation with Database.DMLOptions doesn't work with custom settings
+    final Integer customSettingNameMaxLength = 38;
+    if (setting.Name.length() > customSettingNameMaxLength) {
+      setting.Name = setting.Name.substring(0, customSettingNameMaxLength);
+    }
+    Database.upsert(setting); // NOPMD
   }
 }

@@ -73,4 +73,16 @@ private class FlowRoundRobinAssignerTests {
 
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
   }
+
+  @IsTest
+  static void usesCustomNameWhenSupplied() {
+    FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
+    input.recordToRoundRobin = new ContactPointAddress();
+    input.optionalName = 'Some name';
+    input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
+
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+
+    System.assertEquals(1, [SELECT COUNT() FROM RoundRobin__c WHERE Name = :input.optionalName]);
+  }
 }

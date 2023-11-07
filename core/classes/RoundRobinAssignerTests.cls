@@ -61,6 +61,20 @@ private class RoundRobinAssignerTests {
     }
   }
 
+  @IsTest
+  static void shouldNotFailWhenRoundRobinNameOverCustomSettingLimit() {
+    String assignmentType = '0'.repeat(256);
+    List<User> users = createUsersForAssignment(assignmentType);
+
+    Lead lead = new Lead();
+
+    RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
+    details.assignmentType = assignmentType;
+    new RoundRobinAssigner(new MockUserAssignmentRepo(users), details).assignOwners(new List<Lead>{ lead });
+
+    System.assertEquals(users[0].Id, lead.OwnerId);
+  }
+
   static List<User> createUsersForAssignment(String assignmentType) {
     List<User> users = new List<User>();
     String baseIdString = Schema.User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(11);
