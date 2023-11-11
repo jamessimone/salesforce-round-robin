@@ -16,6 +16,15 @@ public without sharing class QueryAssigner implements RoundRobinAssigner.IAssign
     this.validAssignmentIds = new List<Id>(assignmentIds);
   }
 
+  public QueryAssigner(List<User> flowCollectionOfAssignees) {
+    Set<Id> assignmentIds = new Set<Id>();
+    for (User assignee : flowCollectionOfAssignees) {
+        assignmentIds.add(assignee.Id);
+    }
+
+    this.validAssignmentIds = new List<Id>(assignmentIds);
+  }
+
   public List<Id> getAssignmentIds(String assignmentType) {
     return this.validAssignmentIds;
   }

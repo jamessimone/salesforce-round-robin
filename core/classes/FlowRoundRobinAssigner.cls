@@ -10,6 +10,8 @@ global without sharing class FlowRoundRobinAssigner {
     global String assignmentRepoClassName;
     @InvocableVariable(label='Query To Retrieve Possible Assignees')
     global String queryToRetrieveAssignees;
+    @InvocableVariable(label='Alternative to Assignee Query - Collection of Users from Flow')
+    global List<User> collectionOfAssignees = new List<User>();
     @InvocableVariable(label='Query Id Field - defaults to Id if not supplied')
     global String queryIdField = 'Id';
     @InvocableVariable(label='Owner Field API Name - defaults to OwnerId')
@@ -54,9 +56,9 @@ global without sharing class FlowRoundRobinAssigner {
   }
 
   private void validateInput(FlowInput input) {
-    if (String.isBlank(input.queryToRetrieveAssignees) && String.isBlank(input.assignmentRepoClassName)) {
+    if (String.isBlank(input.queryToRetrieveAssignees) && String.isBlank(input.assignmentRepoClassName) && input.collectionOfAssignees.size()==0) {
       throw new IllegalArgumentException(
-        'Query To Retrieve Possible Assignees or API name of class implementing RoundRobinAssigner.IAssignment repo is required!'
+        'Query To Retrieve Possible Assignees, API name of class implementing RoundRobinAssigner.IAssignment repo, or a collection of at least one user passed in is required!'
       );
     }
     if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
@@ -81,6 +83,8 @@ global without sharing class FlowRoundRobinAssigner {
       assignmentRepo = stubAssignmentRepo;
     } else if (String.isNotBlank(input.assignmentRepoClassName)) {
       assignmentRepo = (RoundRobinAssigner.IAssignmentRepo) Type.forName(input.assignmentRepoClassName).newInstance();
+    } else if (input.collectionOfAssignees.size() != 0) {
+      assignmentRepo = new QueryAssigner(input.collectionOfAssignees);
     } else {
       assignmentRepo = new QueryAssigner(input.queryToRetrieveAssignees, input.queryIdField);
     }
