@@ -33,7 +33,7 @@ private class FlowRoundRobinAssignerTests {
   }
 
   @IsTest
-  static void throwExceptionIfQueryNotFilledOutAndAssignmentRepoNotFilledOut() {
+  static void throwExceptionIfQueryNotFilledOutAndAssignmentRepoNotFilledOutAndNoCollectionPassedIn() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordsToRoundRobin = new List<Account>{ new Account() };
 
@@ -68,6 +68,17 @@ private class FlowRoundRobinAssignerTests {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
     input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
+
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+
+    System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
+  }
+  @IsTest
+  static void singleRecordRoundRobinFromFlow() {
+    FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
+    input.recordToRoundRobin = new ContactPointAddress();
+    input.collectionOfAssignees = new List<User> { new User(Id = UserInfo.getUserId())};
+
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
