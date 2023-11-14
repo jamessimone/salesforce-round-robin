@@ -1,8 +1,8 @@
-public without sharing class QueryAssigner implements RoundRobinAssigner.IAssignmentRepo {
+public without sharing class RoundRobinCollectionAssigner implements RoundRobinAssigner.IAssignmentRepo {
   private static final Map<String, List<SObject>> QUERY_TO_RECORDS = new Map<String, List<SObject>>();
   private final List<Id> validAssignmentIds;
 
-  public QueryAssigner(String query, String assignmentFieldName) {
+  public RoundRobinCollectionAssigner(String query, String assignmentFieldName) {
     Set<Id> assignmentIds = new Set<Id>();
     List<SObject> matchingRecords = QUERY_TO_RECORDS.get(query);
     if (matchingRecords == null) {
@@ -16,10 +16,10 @@ public without sharing class QueryAssigner implements RoundRobinAssigner.IAssign
     this.validAssignmentIds = new List<Id>(assignmentIds);
   }
 
-  public QueryAssigner(List<User> flowCollectionOfAssignees) {
+  public RoundRobinCollectionAssigner(List<User> flowCollectionOfAssignees) {
     Set<Id> assignmentIds = new Set<Id>();
     for (User assignee : flowCollectionOfAssignees) {
-        assignmentIds.add(assignee.Id);
+      assignmentIds.add(assignee.Id);
     }
 
     this.validAssignmentIds = new List<Id>(assignmentIds);

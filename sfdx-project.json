@@ -5,8 +5,8 @@
       "definitionFile": "config/project-scratch-def.json",
       "package": "salesforce-round-robin",
       "path": "core",
-      "versionName": "Fixes truncation issue on Round Robin custom setting",
-      "versionNumber": "0.1.5.0",
+      "versionName": "Introduces User collection variable for Flow as an alternative to querying for assignees",
+      "versionNumber": "0.1.6.0",
       "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
       "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
     },

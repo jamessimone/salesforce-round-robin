@@ -56,7 +56,11 @@ global without sharing class FlowRoundRobinAssigner {
   }
 
   private void validateInput(FlowInput input) {
-    if (String.isBlank(input.queryToRetrieveAssignees) && String.isBlank(input.assignmentRepoClassName) && input.collectionOfAssignees.size()==0) {
+    if (
+      String.isBlank(input.queryToRetrieveAssignees) &&
+      String.isBlank(input.assignmentRepoClassName) &&
+      input.collectionOfAssignees.size() == 0
+    ) {
       throw new IllegalArgumentException(
         'Query To Retrieve Possible Assignees, API name of class implementing RoundRobinAssigner.IAssignment repo, or a collection of at least one user passed in is required!'
       );
@@ -84,9 +88,9 @@ global without sharing class FlowRoundRobinAssigner {
     } else if (String.isNotBlank(input.assignmentRepoClassName)) {
       assignmentRepo = (RoundRobinAssigner.IAssignmentRepo) Type.forName(input.assignmentRepoClassName).newInstance();
     } else if (input.collectionOfAssignees.size() != 0) {
-      assignmentRepo = new QueryAssigner(input.collectionOfAssignees);
+      assignmentRepo = new RoundRobinCollectionAssigner(input.collectionOfAssignees);
     } else {
-      assignmentRepo = new QueryAssigner(input.queryToRetrieveAssignees, input.queryIdField);
+      assignmentRepo = new RoundRobinCollectionAssigner(input.queryToRetrieveAssignees, input.queryIdField);
     }
     return assignmentRepo;
   }
