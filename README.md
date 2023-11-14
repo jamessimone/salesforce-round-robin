@@ -5,12 +5,12 @@
 
 ## Deployment
 
-<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008Oa2hAAC">
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008Oa7sAAC">
   <img alt="Deploy to Salesforce"
        src="./media/deploy-package-to-prod.png">
 </a>
 
-<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008Oa2hAAC">
+<a href="https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6g000008Oa7sAAC">
   <img alt="Deploy to Salesforce Sandbox"
        src="./media/deploy-package-to-sandbox.png">
 </a>
@@ -55,11 +55,11 @@ You have quite a few options when it comes to performing round robin assignments
 Here are a few ways that you can perform assignments:
 
 - You can re-use the static method `FlowRoundRobinAssigner.assign` by creating synthetic `FlowRoundRobinAssigner.FlowInput` records
-- You can call use the bundled `QueryAssigner`:
+- You can call use the bundled `RoundRobinCollectionAssigner`:
 
   ```java
     // in a Trigger / trigger handler class
-    RoundRobinAssigner.IAssignmentRepo queryRepo = new QueryAssigner(
+    RoundRobinAssigner.IAssignmentRepo queryRepo = new RoundRobinCollectionAssigner(
       'SELECT Id FROM User WHERE Some_Condition__c = true', 'Id'
     );
     RoundRobinAssigner.Details assignmentDetails = new RoundRobinAssigner.Details();
