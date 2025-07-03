@@ -5,8 +5,8 @@
       "definitionFile": "config/project-scratch-def.json",
       "package": "salesforce-round-robin",
       "path": "core",
-      "versionName": "Introduces User collection variable for Flow as an alternative to querying for assignees",
-      "versionNumber": "0.1.6.0",
+      "versionName": "Fixes #21 - round robin-ing in bulk from Flow Collection when only a single record is passed in but multiple records are updated at once",
+      "versionNumber": "0.1.7.0",
       "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
       "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
     },
@@ -22,6 +22,7 @@
     "salesforce-round-robin@0.1.3": "04t6g000008C6lwAAC",
     "salesforce-round-robin@0.1.4": "04t6g000008C6sAAAS",
     "salesforce-round-robin@0.1.5": "04t6g000008Oa2hAAC",
-    "salesforce-round-robin@0.1.6": "04t6g000008Oa7sAAC"
+    "salesforce-round-robin@0.1.6": "04t6g000008Oa7sAAC",
+    "salesforce-round-robin@0.1.7": "04tKf000000sy9OIAQ"
   }
 }

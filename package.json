@@ -1,6 +1,6 @@
 {
   "name": "salesforce-round-robin",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Round robin records in Salesforce (SFDC) using Flow or Apex. Performant, fair, fast assignment with configurable user pools",
   "repository": {
     "type": "git",
@@ -10,7 +10,6 @@
   "license": "MIT",
   "devDependencies": {
     "@salesforce/cli": "latest",
-    "@salesforce/sfdx-scanner": "^3.15.0",
     "prettier": "latest",
     "prettier-plugin-apex": "latest"
   },
@@ -22,9 +21,8 @@
   ],
   "scripts": {
     "create:package:round:robin": "pwsh -Command \"&{ . ./scripts/generatePackage.ps1; Generate -PackageName '\"salesforce-round-robin\"' -ReadmePath \"./README.md\" }\"",
-    "prepare": "sf plugins link ./node_modules/@salesforce/sfdx-scanner",
     "prettier": "prettier",
-    "scan": "sf scanner run --pmdconfig config/pmd-ruleset.xml --target . --engine pmd --severity-threshold 3",
+    "scan": "sf code-analyzer run -r pmd:1 -r pmd:2 -r pmd:3 --workspace core/**/*.cls",
     "test": "npm run test:apex",
     "test:apex": "sf apex test run -s RoundRobinTestSuite -w 10",
     "test:lwc": "echo No LWCs so far!"

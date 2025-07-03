@@ -37,14 +37,14 @@ jobs:
     steps:
       # Checkout the code
       - name: 'Checkout source code'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
       - name: 'Setup node'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.17.0'
+          node-version: 'lts/*'
           cache: 'npm'
 
       - run: npm ci
@@ -63,15 +63,17 @@ jobs:
           rm coverage/ -rf
 
       - name: Install & run SFDX Scanner
-        run: npm run scan
+        run: |
+          npx sf plugins install code-analyzer
+          npm run scan
 
       # Authenticate using JWT flow
       - name: 'Auth to dev hub'
         shell: bash
         run: |
           echo "${{ env.DEVHUB_SERVER_KEY }}" > ./jwt-server.key
-          npx sfdx force:auth:jwt:grant --clientid ${{ env.DEVHUB_CONSUMER_KEY }} --username ${{ env.DEVHUB_USERNAME }} --jwtkeyfile ./jwt-server.key --setdefaultdevhubusername
-          npx sfdx config:set defaultusername=${{ env.DEVHUB_USERNAME }}
+          npx sf org login jwt --client-id ${{ env.DEVHUB_CONSUMER_KEY }} --username ${{ env.DEVHUB_USERNAME }} --jwt-key-file ./jwt-server.key --set-default-dev-hub
+          npx sf config set target-org ${{ env.DEVHUB_USERNAME }}
         env:
           DEVHUB_USERNAME: ${{ secrets.DEVHUB_USERNAME }}
           DEVHUB_CONSUMER_KEY: ${{ secrets.DEVHUB_CONSUMER_KEY }}

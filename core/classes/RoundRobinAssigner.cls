@@ -25,9 +25,7 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
     public String assignmentType { get; set; }
     public String ownerField {
       get {
-        if (ownerField == null) {
-          ownerField = OWNER_ID;
-        }
+        ownerField = ownerField ?? OWNER_ID;
         return ownerField;
       }
       set;

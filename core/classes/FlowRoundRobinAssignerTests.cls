@@ -1,15 +1,12 @@
 @IsTest
 private class FlowRoundRobinAssignerTests {
-  static final User FAKE_USER = new User(
-    Id = User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(12)
-  );
+  static final User FAKE_USER = new User(Id = User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(12));
 
   @IsTest
   static void defaultAssignmentToOwnerId() {
-    MockUserAssignmentRepo.STUB_USERS = new List<User>{ FAKE_USER };
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordsToRoundRobin = new List<Account>{ new Account() };
-    input.assignmentRepoClassName = 'MockUserAssignmentRepo';
+    input.collectionOfAssignees = new List<User>{ FAKE_USER };
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
@@ -64,7 +61,7 @@ private class FlowRoundRobinAssignerTests {
   }
 
   @IsTest
-  static void singleRecordRoundRobins() {
+  static void singleRecordRoundRobinsWithAssigneeQuery() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
     input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
@@ -73,16 +70,30 @@ private class FlowRoundRobinAssignerTests {
 
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
   }
+
   @IsTest
-  static void singleRecordRoundRobinFromFlow() {
+  static void singleRecordRoundRobinsWithCollectionOfAssignees() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
-    input.collectionOfAssignees = new List<User> { new User(Id = UserInfo.getUserId())};
-
+    input.collectionOfAssignees = new List<User>{ new User(Id = UserInfo.getUserId()) };
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
+  }
+
+  @SuppressWarnings('PMD.AvoidHardcodingId')
+  @IsTest
+  static void singleRecordGetsUpdatedOwnerFromQueueWhenNotBulkified() {
+    FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
+    input.recordToRoundRobin = new ContactPointAddress();
+    input.collectionOfAssignees = new List<User>{ new User(Id = '005000000000000'), new User(Id = '005000000000001') };
+
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+    System.assertEquals('005000000000000', input.recordToRoundRobin.get('OwnerId'));
+    input.recordToRoundRobin = new ContactPointAddress();
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+    System.assertEquals('005000000000001', input.recordToRoundRobin.get('OwnerId'));
   }
 
   @IsTest
