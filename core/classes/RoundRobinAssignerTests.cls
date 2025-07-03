@@ -8,7 +8,7 @@ private class RoundRobinAssignerTests {
     List<User> users = createUsersForAssignment(assignmentType);
 
     // act
-    RoundRobinAssigner.IAssignmentRepo repo = new MockUserAssignmentRepo(users);
+    RoundRobinAssigner.IAssignmentRepo repo = new RoundRobinAssigner.MockUserAssignmentRepo(users);
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
     new RoundRobinAssigner(repo, details).assignOwners(leadsToAssign);
@@ -39,25 +39,16 @@ private class RoundRobinAssignerTests {
     List<User> users = createUsersForAssignment(assignmentType);
     User inactiveUser = users.remove(0);
 
-    List<Lead> leadsToAssign = new List<Lead>{
-      new Lead(OwnerId = inactiveUser.Id),
-      new Lead(OwnerId = inactiveUser.Id),
-      new Lead(),
-      new Lead()
-    };
+    List<Lead> leadsToAssign = new List<Lead>{ new Lead(OwnerId = inactiveUser.Id), new Lead(OwnerId = inactiveUser.Id), new Lead(), new Lead() };
 
     // act
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
-    new RoundRobinAssigner(new MockUserAssignmentRepo(users), details).assignOwners(leadsToAssign);
+    new RoundRobinAssigner(new RoundRobinAssigner.MockUserAssignmentRepo(users), details).assignOwners(leadsToAssign);
 
     // assert
     for (Lead assignedLead : leadsToAssign) {
-      System.assertEquals(
-        users[0].Id,
-        assignedLead.OwnerId,
-        'Should have re-assigned but failed at index: ' + leadsToAssign.indexOf(assignedLead)
-      );
+      System.assertEquals(users[0].Id, assignedLead.OwnerId, 'Should have re-assigned but failed at index: ' + leadsToAssign.indexOf(assignedLead));
     }
   }
 
@@ -70,7 +61,7 @@ private class RoundRobinAssignerTests {
 
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
-    new RoundRobinAssigner(new MockUserAssignmentRepo(users), details).assignOwners(new List<Lead>{ lead });
+    new RoundRobinAssigner(new RoundRobinAssigner.MockUserAssignmentRepo(users), details).assignOwners(new List<Lead>{ lead });
 
     System.assertEquals(users[0].Id, lead.OwnerId);
   }

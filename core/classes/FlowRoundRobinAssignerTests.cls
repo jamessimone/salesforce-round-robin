@@ -1,15 +1,13 @@
 @IsTest
 private class FlowRoundRobinAssignerTests {
-  static final User FAKE_USER = new User(
-    Id = User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(12)
-  );
+  static final User FAKE_USER = new User(Id = User.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix() + '0'.repeat(12));
 
   @IsTest
   static void defaultAssignmentToOwnerId() {
-    MockUserAssignmentRepo.STUB_USERS = new List<User>{ FAKE_USER };
+    RoundRobinAssigner.STUB_USERS.add(FAKE_USER);
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordsToRoundRobin = new List<Account>{ new Account() };
-    input.assignmentRepoClassName = 'MockUserAssignmentRepo';
+    input.assignmentRepoClassName = RoundRobinAssigner.MockUserAssignmentRepo.class.getName();
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
@@ -77,8 +75,7 @@ private class FlowRoundRobinAssignerTests {
   static void singleRecordRoundRobinFromFlow() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
-    input.collectionOfAssignees = new List<User> { new User(Id = UserInfo.getUserId())};
-
+    input.collectionOfAssignees = new List<User>{ new User(Id = UserInfo.getUserId()) };
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 

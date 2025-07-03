@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD.AvoidGlobalModifier')
 global without sharing class FlowRoundRobinAssigner {
   @TestVisible
   private static RoundRobinAssigner.IAssignmentRepo stubAssignmentRepo;
@@ -56,11 +57,7 @@ global without sharing class FlowRoundRobinAssigner {
   }
 
   private void validateInput(FlowInput input) {
-    if (
-      String.isBlank(input.queryToRetrieveAssignees) &&
-      String.isBlank(input.assignmentRepoClassName) &&
-      input.collectionOfAssignees.size() == 0
-    ) {
+    if (String.isBlank(input.queryToRetrieveAssignees) && String.isBlank(input.assignmentRepoClassName) && input.collectionOfAssignees.size() == 0) {
       throw new IllegalArgumentException(
         'Query To Retrieve Possible Assignees, API name of class implementing RoundRobinAssigner.IAssignment repo, or a collection of at least one user passed in is required!'
       );

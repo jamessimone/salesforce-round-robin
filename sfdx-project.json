@@ -5,8 +5,8 @@
       "definitionFile": "config/project-scratch-def.json",
       "package": "salesforce-round-robin",
       "path": "core",
-      "versionName": "Introduces User collection variable for Flow as an alternative to querying for assignees",
-      "versionNumber": "0.1.6.0",
+      "versionName": "TODO - hopefully fixes round robin-ing in bulk from Flow Collection for #21",
+      "versionNumber": "0.1.7.0",
       "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
       "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
     },

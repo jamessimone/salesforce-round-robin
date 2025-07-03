@@ -89,4 +89,34 @@ public without sharing class RoundRobinAssigner implements IThreadSafeCacheVisit
     }
     return currentAssignmentIndex;
   }
+
+  @SuppressWarnings('PMD.PropertyNamingConventions')
+  @TestVisible
+  private static final List<User> STUB_USERS {
+    get {
+      STUB_USERS = STUB_USERS ?? new List<User>();
+      return STUB_USERS;
+    }
+    set;
+  }
+
+  public class MockUserAssignmentRepo implements RoundRobinAssigner.IAssignmentRepo {
+    private final List<User> users;
+
+    public MockUserAssignmentRepo() {
+      this.users = STUB_USERS;
+    }
+
+    public MockUserAssignmentRepo(List<User> users) {
+      this.users = users;
+    }
+
+    public List<Id> getAssignmentIds(String assignmentType) {
+      List<Id> assignmentIds = new List<Id>();
+      for (User user : this.users) {
+        assignmentIds.add(user.Id);
+      }
+      return assignmentIds;
+    }
+  }
 }
