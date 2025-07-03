@@ -33,9 +33,11 @@ global without sharing class FlowRoundRobinAssigner {
     for (FlowInput input : flowInputs) {
       if (bulkifiedInput == null) {
         bulkifiedInput = input;
+        bulkifiedInput.recordsToRoundRobin = bulkifiedInput.recordsToRoundRobin ?? new List<SObject>();
       }
-      if (input.recordsToRoundRobin?.isEmpty() != false && input.recordToRoundRobin != null) {
-        input.recordsToRoundRobin = new List<SObject>{ input.recordToRoundRobin };
+      input.recordsToRoundRobin = input.recordsToRoundRobin ?? new List<SObject>();
+      if (input.recordToRoundRobin != null && new Set<SObject>(input.recordsToRoundRobin).contains(input.recordToRoundRobin) == false) {
+        input.recordsToRoundRobin.add(input.recordToRoundRobin);
       }
       bulkifiedInput.recordsToRoundRobin.addAll(input.recordsToRoundRobin);
     }

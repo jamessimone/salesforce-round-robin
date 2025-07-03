@@ -4,10 +4,9 @@ private class FlowRoundRobinAssignerTests {
 
   @IsTest
   static void defaultAssignmentToOwnerId() {
-    RoundRobinAssigner.STUB_USERS.add(FAKE_USER);
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordsToRoundRobin = new List<Account>{ new Account() };
-    input.assignmentRepoClassName = RoundRobinAssigner.MockUserAssignmentRepo.class.getName();
+    input.collectionOfAssignees = new List<User>{ FAKE_USER };
 
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
@@ -62,7 +61,7 @@ private class FlowRoundRobinAssignerTests {
   }
 
   @IsTest
-  static void singleRecordRoundRobins() {
+  static void singleRecordRoundRobinsWithAssigneeQuery() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
     input.queryToRetrieveAssignees = 'SELECT Id FROM User WHERE Id = \'' + UserInfo.getUserId() + '\'';
@@ -71,8 +70,9 @@ private class FlowRoundRobinAssignerTests {
 
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
   }
+
   @IsTest
-  static void singleRecordRoundRobinFromFlow() {
+  static void singleRecordRoundRobinsWithCollectionOfAssignees() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
     input.recordToRoundRobin = new ContactPointAddress();
     input.collectionOfAssignees = new List<User>{ new User(Id = UserInfo.getUserId()) };
@@ -80,6 +80,19 @@ private class FlowRoundRobinAssignerTests {
     FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
 
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
+  }
+
+  @IsTest
+  static void singleRecordGetsUpdatedOwnerFromQueueWhenNotBulkified() {
+    FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
+    input.recordToRoundRobin = new ContactPointAddress();
+    input.collectionOfAssignees = new List<User>{ new User(Id = '005000000000000'), new User(Id = '005000000000001') };
+
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+    System.assertEquals('005000000000000', input.recordToRoundRobin.get('OwnerId'));
+    input.recordToRoundRobin = new ContactPointAddress();
+    FlowRoundRobinAssigner.assign(new List<FlowRoundRobinAssigner.FlowInput>{ input });
+    System.assertEquals('005000000000001', input.recordToRoundRobin.get('OwnerId'));
   }
 
   @IsTest

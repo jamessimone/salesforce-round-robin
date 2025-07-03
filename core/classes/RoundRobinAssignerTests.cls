@@ -8,7 +8,7 @@ private class RoundRobinAssignerTests {
     List<User> users = createUsersForAssignment(assignmentType);
 
     // act
-    RoundRobinAssigner.IAssignmentRepo repo = new RoundRobinAssigner.MockUserAssignmentRepo(users);
+    RoundRobinAssigner.IAssignmentRepo repo = new UserAssignmentRepo(users);
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
     new RoundRobinAssigner(repo, details).assignOwners(leadsToAssign);
@@ -44,7 +44,7 @@ private class RoundRobinAssignerTests {
     // act
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
-    new RoundRobinAssigner(new RoundRobinAssigner.MockUserAssignmentRepo(users), details).assignOwners(leadsToAssign);
+    new RoundRobinAssigner(new UserAssignmentRepo(users), details).assignOwners(leadsToAssign);
 
     // assert
     for (Lead assignedLead : leadsToAssign) {
@@ -61,7 +61,7 @@ private class RoundRobinAssignerTests {
 
     RoundRobinAssigner.Details details = new RoundRobinAssigner.Details();
     details.assignmentType = assignmentType;
-    new RoundRobinAssigner(new RoundRobinAssigner.MockUserAssignmentRepo(users), details).assignOwners(new List<Lead>{ lead });
+    new RoundRobinAssigner(new UserAssignmentRepo(users), details).assignOwners(new List<Lead>{ lead });
 
     System.assertEquals(users[0].Id, lead.OwnerId);
   }
@@ -73,5 +73,21 @@ private class RoundRobinAssignerTests {
       users.add(new User(Department = assignmentType, Id = baseIdString + (index + 1)));
     }
     return users;
+  }
+
+  private class UserAssignmentRepo implements RoundRobinAssigner.IAssignmentRepo {
+    private final List<User> users;
+
+    public UserAssignmentRepo(List<User> users) {
+      this.users = users;
+    }
+
+    public List<Id> getAssignmentIds(String assignmentType) {
+      List<Id> assignmentIds = new List<Id>();
+      for (User user : this.users) {
+        assignmentIds.add(user.Id);
+      }
+      return assignmentIds;
+    }
   }
 }
