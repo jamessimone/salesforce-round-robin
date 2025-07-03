@@ -6,8 +6,8 @@ $testInvocation = 'npx sf apex run test --suite-names RoundRobinTestSuite --resu
 $scratchOrgName = 'round-robin-scratch'
 function Start-Deploy() {
   Write-Debug "Deploying source ..."
-  npx sf project deploy start --source-dir -p core
-  npx sf project deploy start --source-dir -p integration-tests
+  npx sf project deploy start --source-dir core
+  npx sf project deploy start --source-dir integration-tests
 }
 
 function Start-Tests() {
@@ -46,6 +46,7 @@ if($scratchOrgAllotment -gt 0) {
     npx sf org create scratch --definition-file config/project-scratch-def.json --alias "$scratchOrgName" --set-default --duration-days 30
   } catch {
     # Do nothing, we'll just try to deploy to the Dev Hub instead
+    Write-Host "Scratch org creation failed, attempting to run within Dev Hub instead"
   }
 }
 
