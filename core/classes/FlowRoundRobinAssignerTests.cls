@@ -82,6 +82,7 @@ private class FlowRoundRobinAssignerTests {
     System.assertEquals(UserInfo.getUserId(), input.recordToRoundRobin.get('OwnerId'));
   }
 
+  @SuppressWarnings('PMD.AvoidHardcodingId')
   @IsTest
   static void singleRecordGetsUpdatedOwnerFromQueueWhenNotBulkified() {
     FlowRoundRobinAssigner.FlowInput input = new FlowRoundRobinAssigner.FlowInput();
