@@ -5,8 +5,8 @@
       "definitionFile": "config/project-scratch-def.json",
       "package": "salesforce-round-robin",
       "path": "core",
-      "versionName": "Fixes #21 - round robin-ing in bulk from Flow Collection when only a single record is passed in but multiple records are updated at once",
-      "versionNumber": "0.1.7.0",
+      "versionName": "TODO",
+      "versionNumber": "0.1.8.0",
       "versionDescription": "Invocable & Apex-ready Round Robin Assigner for Salesforce Flow, Process Builder, Apex and more",
       "releaseNotesUrl": "https://github.com/jamessimone/salesforce-round-robin/releases/latest"
     },
