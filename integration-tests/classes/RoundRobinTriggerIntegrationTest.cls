@@ -9,14 +9,15 @@ private class RoundRobinTriggerIntegrationTest {
       SELECT Id, FirstName, LastName, Email, Alias, TimeZoneSidKey, LocaleSidKey, EmailEncodingKey, ProfileId, LanguageLocaleKey
       FROM User
       WHERE Id = :UserInfo.getUserId()
+      WITH SYSTEM_MODE
     ];
     User newUser = user.clone();
     newUser.Username = 'another1' + System.now().getTime() + '@example.com';
     newUser.IsActive = true;
     newUser.Email = newUser.Username;
-    insert newUser;
+    insert as system newUser;
 
-    insert new List<QuickText>{
+    insert as system new List<QuickText>{
       // should be assigned to new user
       new QuickText(Name = 'One', Message = 'One'),
       // should be assigned to current user
@@ -25,7 +26,7 @@ private class RoundRobinTriggerIntegrationTest {
       new QuickText(Name = 'Three', Message = 'Three')
     };
 
-    List<QuickText> updatedQuickTexts = [SELECT OwnerId, Owner.FirstName FROM QuickText];
+    List<QuickText> updatedQuickTexts = [SELECT OwnerId, Owner.FirstName FROM QuickText WITH SYSTEM_MODE];
     Integer ownerByNewUserCount = 0;
     Integer ownerdByMeCount = 0;
     for (QuickText updatedQuickText : updatedQuickTexts) {
