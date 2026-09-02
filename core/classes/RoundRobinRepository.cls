@@ -82,6 +82,6 @@ public without sharing class RoundRobinRepository {
     if (setting.Name.length() > customSettingNameMaxLength) {
       setting.Name = setting.Name.substring(0, customSettingNameMaxLength);
     }
-    Database.upsert(setting); // NOPMD
+    Database.upsert(setting, System.AccessLevel.SYSTEM_MODE); // NOPMD
   }
 }

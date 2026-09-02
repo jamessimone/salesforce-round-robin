@@ -6,20 +6,21 @@ private class RoundRobinFlowIntegrationTests {
       SELECT Id, LastName, Email, Alias, TimeZoneSidKey, LocaleSidKey, EmailEncodingKey, ProfileId, LanguageLocaleKey, Username
       FROM User
       WHERE Id = :UserInfo.getUserId()
+      WITH SYSTEM_MODE
     ];
     User roundRobinUser = existingUser.clone();
     roundRobinUser.FirstName = null;
     roundRobinUser.Username = 'roundRobin@test.com';
     // "roundRobinUser" is hard-coded into the query in flow
     roundRobinUser.LastName = 'roundRobinUser';
-    insert roundRobinUser;
+    insert as system roundRobinUser;
 
     List<Lead> leads = new List<Lead>();
     // stress test!
     for (Integer index = 0; index < 200; index++) {
       leads.add(new Lead(LastName = 'Assignment ' + index, Company = 'Round Robin'));
     }
-    insert leads;
+    insert as system leads;
 
     leads = [SELECT Id, OwnerId FROM Lead];
     for (Lead lead : leads) {

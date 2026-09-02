@@ -11,15 +11,15 @@ global without sharing class FlowRoundRobinAssigner {
     global String assignmentRepoClassName;
     @InvocableVariable(label='Query To Retrieve Possible Assignees')
     global String queryToRetrieveAssignees;
-    @InvocableVariable(label='Alternative to Assignee Query - Collection of Users from Flow')
-    global List<User> collectionOfAssignees = new List<User>();
+    @InvocableVariable(label='Alternative to Assignee Query - Collection of Users from Flow' required=false)
+    global List<User> collectionOfAssignees;
     @InvocableVariable(label='Query Id Field - defaults to Id if not supplied')
     global String queryIdField = 'Id';
     @InvocableVariable(label='Owner Field API Name - defaults to OwnerId')
     global String ownerFieldApiName = 'OwnerId';
-    @InvocableVariable(label='Records to round robin - either this or single record is required')
+    @InvocableVariable(label='Records to round robin - either this or single record is required' required=false)
     global List<SObject> recordsToRoundRobin = new List<SObject>();
-    @InvocableVariable(label='Single record to round robin - either this or records to round robin is required')
+    @InvocableVariable(label='Single record to round robin - either this or records to round robin is required' required=false)
     global SObject recordToRoundRobin;
     @InvocableVariable(label='Update records - defaults to false')
     global Boolean updateRecords = false;
@@ -36,6 +36,7 @@ global without sharing class FlowRoundRobinAssigner {
         bulkifiedInput.recordsToRoundRobin = bulkifiedInput.recordsToRoundRobin ?? new List<SObject>();
       }
       input.recordsToRoundRobin = input.recordsToRoundRobin ?? new List<SObject>();
+      input.collectionOfAssignees = input.collectionOfAssignees ?? new List<User>();
       if (input.recordToRoundRobin != null && new Set<SObject>(input.recordsToRoundRobin).contains(input.recordToRoundRobin) == false) {
         input.recordsToRoundRobin.add(input.recordToRoundRobin);
       }
@@ -47,7 +48,7 @@ global without sharing class FlowRoundRobinAssigner {
       SELF.roundRobin(bulkifiedInput);
     }
     if (bulkifiedInput?.updateRecords == true) {
-      update bulkifiedInput.recordsToRoundRobin;
+      update as system bulkifiedInput.recordsToRoundRobin;
     }
   }
 

@@ -23,7 +23,7 @@ function Update-Package-Install-Links {
 
 function Get-Is-Version-Promoted {
   param ($versionNumber, $packageName)
-  $promotedPackageVersions = (npx sfdx force:package:version:list --released --packages $packageName --json | ConvertFrom-Json).result | Select-Object -ExpandProperty Version
+  $promotedPackageVersions = (npx sf package version list --released --packages $packageName --json | ConvertFrom-Json).result | Select-Object -ExpandProperty Version
   if ($null -eq $promotedPackageVersions) {
     return $false
   } else {
@@ -84,7 +84,7 @@ function Generate() {
 
   Write-Host "Creating package version: $currentPackageVersion ..." -ForegroundColor White
 
-  $createPackageResult = npx sfdx force:package:version:create -p $packageName -w 30 -c -x --json | ConvertFrom-Json
+  $createPackageResult = npx sf package version create --package $packageName --wait 30 --code-coverage --installation-key-bypass --version-number $currentPackageVersion --json | ConvertFrom-Json
   $currentPackageVersionId = $createPackageResult.result.SubscriberPackageVersionId
   if ($null -eq $currentPackageVersionId) {
     Write-Host "Package create fail! Result: $createPackageResult" -ForegroundColor Red

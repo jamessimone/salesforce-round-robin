@@ -6,7 +6,7 @@ public without sharing class RoundRobinCollectionAssigner implements RoundRobinA
     Set<Id> assignmentIds = new Set<Id>();
     List<SObject> matchingRecords = QUERY_TO_RECORDS.get(query);
     if (matchingRecords == null) {
-      matchingRecords = Database.query(query);
+      matchingRecords = Database.query(query, System.AccessLevel.SYSTEM_MODE);
       QUERY_TO_RECORDS.put(query, matchingRecords);
     }
 
