@@ -7,23 +7,33 @@ global without sharing class FlowRoundRobinAssigner {
   private static final FlowRoundRobinAssigner SELF = new FlowRoundRobinAssigner();
 
   global class FlowInput {
-    @InvocableVariable(label='Alternative to query: API name of class that implements RoundRobinAssigner.IAssignmentRepo')
-    global String assignmentRepoClassName;
-    @InvocableVariable(label='Query To Retrieve Possible Assignees')
-    global String queryToRetrieveAssignees;
-    @InvocableVariable(label='Alternative to Assignee Query - Collection of Users from Flow' required=false)
-    global List<User> collectionOfAssignees;
-    @InvocableVariable(label='Query Id Field - defaults to Id if not supplied')
-    global String queryIdField = 'Id';
-    @InvocableVariable(label='Owner Field API Name - defaults to OwnerId')
-    global String ownerFieldApiName = 'OwnerId';
+    // Record selection - one of these is required
     @InvocableVariable(label='Records to round robin - either this or single record is required' required=false)
     global List<SObject> recordsToRoundRobin = new List<SObject>();
     @InvocableVariable(label='Single record to round robin - either this or records to round robin is required' required=false)
     global SObject recordToRoundRobin;
-    @InvocableVariable(label='Update records - defaults to false')
+
+    // Assignment details - who will be part of the queue?
+    @InvocableVariable(label='Alternative to query: API name of class that implements RoundRobinAssigner.IAssignmentRepo' required=false)
+    global String assignmentRepoClassName;
+    @InvocableVariable(label='Query To Retrieve Possible Assignees' required=false)
+    global String queryToRetrieveAssignees;
+    @InvocableVariable(label='Alternative to Assignee Query - Collection of Users from Flow' required=false)
+    global List<User> collectionOfAssignees;
+
+    // Mapping section
+    @InvocableVariable(label='Query Id Field' description='defaults to Id if not supplied' required=false)
+    global String queryIdField = 'Id';
+    @InvocableVariable(label='Owner Field API Name' description='defaults to OwnerId')
+    global String ownerFieldApiName = 'OwnerId';
+
+    // Advanced options
+    @InvocableVariable(label='Update records' description='defaults to false')
     global Boolean updateRecords = false;
-    @InvocableVariable(label='Name For Custom Setting Record')
+    @InvocableVariable(
+      label='Name For Custom Setting Record'
+      description='This will otherwise be inferred, but each round robin queue is given a distinct name that is applied to the custom setting record for that queue'
+    )
     global String optionalName;
   }
 
